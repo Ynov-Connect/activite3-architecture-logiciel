@@ -1,0 +1,79 @@
+=== APRÈS REFACTORING - Architecture avec module API ===
+
+Module: api
+-----------
+com.jad:api:jar:1.0-SNAPSHOT
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+   (dépendances de test omises pour clarté)
+
+✅ Aucune dépendance métier - Module de contrats pur
+
+
+Module: utils
+-------------
+com.jad:utils:jar:1.0-SNAPSHOT
++- com.jad:api:jar:1.0-SNAPSHOT:compile
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+
+✅ Dépend uniquement de l'API
+
+
+Module: user-interface
+----------------------
+com.jad:user-interface:jar:1.0-SNAPSHOT
++- com.jad:api:jar:1.0-SNAPSHOT:compile
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+
+✅ Dépend uniquement de l'API (pas de data-management, pas de sensor-data-collection)
+
+
+Module: data-management
+-----------------------
+com.jad:data-management:jar:1.0-SNAPSHOT
++- com.jad:api:jar:1.0-SNAPSHOT:compile
++- com.jad:utils:jar:1.0-SNAPSHOT:provided
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+
+✅ Dépend uniquement de l'API (pas de sensor-data-collection)
+
+
+Module: sensor-data-collection
+-------------------------------
+com.jad:sensor-data-collection:jar:1.0-SNAPSHOT
++- com.jad:api:jar:1.0-SNAPSHOT:compile
++- com.jad:utils:jar:1.0-SNAPSHOT:provided
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+
+✅ Dépend uniquement de l'API
+
+
+Module: report-generation
+--------------------------
+com.jad:report-generation:jar:1.0-SNAPSHOT
++- com.jad:api:jar:1.0-SNAPSHOT:compile
++- com.jad:utils:jar:1.0-SNAPSHOT:provided
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+
+✅ Dépend uniquement de l'API (pas de sensor-data-collection)
+
+
+Module: main-application
+-------------------------
+com.jad:main-application:jar:1.0-SNAPSHOT
++- com.jad:api:jar:1.0-SNAPSHOT:compile
++- com.jad:utils:jar:1.0-SNAPSHOT:compile
++- com.jad:user-interface:jar:1.0-SNAPSHOT:compile
++- com.jad:data-management:jar:1.0-SNAPSHOT:compile
++- com.jad:sensor-data-collection:jar:1.0-SNAPSHOT:compile
++- com.jad:report-generation:jar:1.0-SNAPSHOT:compile
+\- org.junit.jupiter:junit-jupiter:jar:5.8.1:test
+
+✅ Module orchestrateur qui agrège toutes les implémentations
+
+
+=== RÉSULTAT ===
+✅ Aucune dépendance cyclique
+✅ Tous les modules dépendent uniquement de l'API
+✅ Couplage faible via interfaces
+✅ Principe d'inversion de dépendances respecté
+

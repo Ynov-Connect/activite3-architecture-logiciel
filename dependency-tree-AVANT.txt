@@ -1,0 +1,78 @@
+=== AVANT REFACTORING - Dépendances cycliques ===
+
+Module: utils
+-------------
+com.jad:utils:jar:1.0-SNAPSHOT
+(pas de dépendances métier)
+
+❌ Problème : Les interfaces ILogger et LogType sont dans utils
+
+
+Module: sensor-data-collection
+-------------------------------
+com.jad:sensor-data-collection:jar:1.0-SNAPSHOT
++- com.jad:utils:jar:1.0-SNAPSHOT:provided
+
+❌ Problème : Les interfaces ISensor, ISensorFactory et types SensorData, SensorType sont dans ce module
+❌ Tous les autres modules doivent dépendre de sensor-data-collection pour utiliser ces types
+
+
+Module: data-management
+-----------------------
+com.jad:data-management:jar:1.0-SNAPSHOT
++- com.jad:sensor-data-collection:jar:1.0-SNAPSHOT:provided  ❌ DÉPENDANCE PROBLÉMATIQUE
++- com.jad:utils:jar:1.0-SNAPSHOT:provided
+
+❌ Problème : Doit dépendre de sensor-data-collection pour ISensor et SensorData
+❌ Les interfaces IDataManager, IDataProcessor, IDataStorage sont dans ce module
+
+
+Module: report-generation
+--------------------------
+com.jad:report-generation:jar:1.0-SNAPSHOT
++- com.jad:sensor-data-collection:jar:1.0-SNAPSHOT:provided  ❌ DÉPENDANCE PROBLÉMATIQUE
++- com.jad:utils:jar:1.0-SNAPSHOT:provided
+
+❌ Problème : Doit dépendre de sensor-data-collection juste pour SensorData
+❌ Les interfaces IReportGenerator et ReportType sont dans ce module
+
+
+Module: user-interface
+----------------------
+com.jad:user-interface:jar:1.0-SNAPSHOT
++- com.jad:data-management:jar:1.0-SNAPSHOT:provided         ❌ DÉPENDANCE PROBLÉMATIQUE
++- com.jad:sensor-data-collection:jar:1.0-SNAPSHOT:provided  ❌ DÉPENDANCE PROBLÉMATIQUE
+
+❌ Problème : Dépend de data-management ET sensor-data-collection
+❌ Les interfaces IUserInterface, IApplication et UserAction sont dans ce module
+
+
+Module: main-application
+-------------------------
+com.jad:main-application:jar:1.0-SNAPSHOT
++- com.jad:utils:jar:1.0-SNAPSHOT:compile
++- com.jad:user-interface:jar:1.0-SNAPSHOT:compile
++- com.jad:data-management:jar:1.0-SNAPSHOT:compile
++- com.jad:sensor-data-collection:jar:1.0-SNAPSHOT:compile
++- com.jad:report-generation:jar:1.0-SNAPSHOT:compile
+
+
+=== PROBLÈMES IDENTIFIÉS ===
+
+❌ DÉPENDANCES CYCLIQUES :
+   - sensor-data-collection est requis par presque tous les modules
+   - data-management est requis par user-interface
+   - Couplage fort entre les modules
+
+❌ VIOLATION DU PRINCIPE DE RESPONSABILITÉ UNIQUE :
+   - Les interfaces sont mélangées avec les implémentations
+   - Impossible de dépendre seulement des contrats
+
+❌ DIFFICULTÉS DE MAINTENANCE :
+   - Modifier une interface nécessite de recompiler tous les modules dépendants
+   - Impossibilité de créer des implémentations alternatives facilement
+
+❌ TESTABILITÉ RÉDUITE :
+   - Difficile de mocker les dépendances
+   - Tests unitaires couplés aux implémentations concrètes
+

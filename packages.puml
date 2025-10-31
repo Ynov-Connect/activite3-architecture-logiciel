@@ -1,0 +1,117 @@
+@startuml MavenSensorHub - Package Diagram
+
+!define CORE_COLOR #E3F2FD
+!define API_COLOR #FFF9C4
+!define IMPL_COLOR #C8E6C9
+
+skinparam packageStyle rectangle
+skinparam component {
+    BackgroundColor<<api>> API_COLOR
+    BackgroundColor<<core>> CORE_COLOR
+    BackgroundColor<<impl>> IMPL_COLOR
+    BorderColor #666666
+    FontSize 12
+}
+
+package "MavenSensorHub" {
+    
+    package "api" <<api>> {
+        [Interfaces & Contrats]
+        note right
+            - ISensor, ISensorFactory
+            - SensorData, SensorType
+            - IDataManager, IDataProcessor
+            - IDataStorage
+            - IReportGenerator, ReportType
+            - IUserInterface, IApplication
+            - UserAction
+            - ILogger, LogType
+        end note
+    }
+    
+    package "utils" <<core>> {
+        [Logger]
+        [Utils]
+    }
+    
+    package "sensor-data-collection" <<impl>> {
+        [SensorFactory]
+        [TemperatureSensor]
+        [HumiditySensor]
+        [PressureSensor]
+        [WindSpeedSensor]
+        [AbstractSensor]
+    }
+    
+    package "data-management" <<impl>> {
+        [DataManager]
+        [DataCollector]
+        [DataProcessor]
+        [DataStorage]
+        [DataValidator]
+    }
+    
+    package "report-generation" <<impl>> {
+        [ReportGenerator]
+        [TextReportGenerator]
+        [CSVReportGenerator]
+        [AbstractReportGenerator]
+    }
+    
+    package "user-interface" <<impl>> {
+        [UserInterface]
+        [Dashboard]
+        [UserInteraction]
+    }
+    
+    package "main-application" <<core>> {
+        [Application]
+        [Main]
+    }
+}
+
+' Dépendances
+[utils] --> [api] : <<use>>
+[sensor-data-collection] --> [api] : <<use>>
+[sensor-data-collection] ..> [utils] : <<provided>>
+
+[data-management] --> [api] : <<use>>
+[data-management] ..> [utils] : <<provided>>
+
+[report-generation] --> [api] : <<use>>
+[report-generation] ..> [utils] : <<provided>>
+
+[user-interface] --> [api] : <<use>>
+
+[main-application] --> [api] : <<use>>
+[main-application] --> [utils] : <<use>>
+[main-application] --> [sensor-data-collection] : <<use>>
+[main-application] --> [data-management] : <<use>>
+[main-application] --> [report-generation] : <<use>>
+[main-application] --> [user-interface] : <<use>>
+
+legend right
+    |= Légende |
+    | API | Module de contrats (interfaces, enums, records) |
+    | CORE | Modules centraux de l'application |
+    | IMPL | Modules d'implémentation métier |
+    | --> | Dépendance compile |
+    | ..> | Dépendance provided |
+endlegend
+
+note as N1
+    <b>Architecture en couches</b>
+    
+    1. <b>API Layer</b> : Contrats sans dépendances
+    2. <b>Core Layer</b> : Utils et Main Application
+    3. <b>Implementation Layer</b> : Logique métier
+    
+    <b>Avantages</b> :
+    - Pas de dépendances cycliques
+    - Couplage faible via interfaces
+    - Testabilité maximale
+    - Évolutivité facilitée
+end note
+
+@enduml
+
