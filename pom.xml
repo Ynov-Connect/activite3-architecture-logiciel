@@ -77,12 +77,13 @@
                 <executions>
                     <execution>
                         <id>analyze</id>
+                        <phase>generate-test-resources</phase>
                         <goals>
                             <goal>tree</goal>
                         </goals>
                         <configuration>
                             <outputFile>${project.build.directory}/dependency-tree.txt</outputFile>
-                            <appendOutput>true</appendOutput>
+                            <appendOutput>false</appendOutput>
                         </configuration>
                     </execution>
                 </executions>
