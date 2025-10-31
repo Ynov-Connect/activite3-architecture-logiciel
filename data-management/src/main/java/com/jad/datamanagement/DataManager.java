@@ -1,8 +1,9 @@
 package com.jad.datamanagement;
 
-import com.jad.sensordata.ISensor;
-import com.jad.sensordata.SensorData;
-import com.jad.sensordata.SensorType;
+import com.jad.api.IDataManager;
+import com.jad.api.ISensor;
+import com.jad.api.SensorData;
+import com.jad.api.SensorType;
 import com.jad.utils.Utils;
 
 import java.text.MessageFormat;
