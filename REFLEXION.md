@@ -30,3 +30,13 @@ La prochaine amélioration serait d'introduire un **module de tests d'intégrati
 - Utilisation de TestContainers
 - Ajout de Jacoco pour mesurer la couverture de code 
 
+
+## 4. Si vous avez un problème avec les tests directement en local, il faut passer par le pannel maven via IntelliJ (j'ai eu du mal à trouvé), je vous explique comment faire :
+
+Dans IntelliJ IDEA, dans le panneau Maven :
+Ouvrez le panneau Maven (à droite)
+Déroulez MavenSensorHub
+Déroulez Lifecycle
+Double-cliquez sur clean puis sur test
+
+Et voila vous pouvez ! 
