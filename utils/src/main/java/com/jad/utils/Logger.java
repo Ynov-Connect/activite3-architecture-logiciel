@@ -1,5 +1,8 @@
 package com.jad.utils;
 
+import com.jad.api.ILogger;
+import com.jad.api.LogType;
+
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
