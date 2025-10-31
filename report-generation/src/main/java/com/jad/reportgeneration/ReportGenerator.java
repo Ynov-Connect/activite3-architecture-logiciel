@@ -1,6 +1,8 @@
 package com.jad.reportgeneration;
 
-import com.jad.sensordata.SensorData;
+import com.jad.api.IReportGenerator;
+import com.jad.api.ReportType;
+import com.jad.api.SensorData;
 
 import java.util.List;
 
