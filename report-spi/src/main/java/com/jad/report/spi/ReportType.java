@@ -1,5 +1,8 @@
-package com.jad.api;
+package com.jad.report.spi;
 
+/**
+ * Énumération des types de rapports supportés.
+ */
 public enum ReportType {
     TEXT("Text"),
     CSV("CSV");

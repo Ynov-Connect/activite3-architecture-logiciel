@@ -1,6 +1,6 @@
 package com.jad.sensordata;
 
-import com.jad.api.SensorType;
+import com.jad.model.SensorType;
 
 class TemperatureSensor extends AbstractSensor {
     public TemperatureSensor() {

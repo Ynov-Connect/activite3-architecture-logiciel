@@ -1,4 +1,4 @@
-package com.jad.api;
+package com.jad.model;
 
 import java.time.LocalDateTime;
 

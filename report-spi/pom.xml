@@ -9,7 +9,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api</artifactId>
+    <artifactId>report-spi</artifactId>
+    <name>Report SPI</name>
+    <description>Service Provider Interface pour la génération de rapports</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -21,10 +23,7 @@
         <dependency>
             <groupId>com.jad</groupId>
             <artifactId>shared-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jad</groupId>
-            <artifactId>report-spi</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

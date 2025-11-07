@@ -1,6 +1,6 @@
 package com.jad.datamanagement;
 
-import com.jad.api.SensorData;
+import com.jad.model.SensorData;
 
 import java.time.Duration;
 import java.util.Optional;

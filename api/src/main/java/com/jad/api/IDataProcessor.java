@@ -1,5 +1,8 @@
 package com.jad.api;
 
+import com.jad.model.SensorData;
+import com.jad.model.SensorType;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;

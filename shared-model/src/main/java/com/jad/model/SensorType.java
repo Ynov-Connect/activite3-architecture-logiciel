@@ -1,4 +1,4 @@
-package com.jad.api;
+package com.jad.model;
 
 public enum SensorType {
     HUMIDITY("HumiditySensor", 20, 80, "%"),

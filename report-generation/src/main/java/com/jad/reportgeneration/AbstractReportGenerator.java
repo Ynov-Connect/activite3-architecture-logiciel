@@ -1,7 +1,7 @@
 package com.jad.reportgeneration;
 
-import com.jad.api.ReportType;
-import com.jad.api.SensorData;
+import com.jad.model.SensorData;
+import com.jad.report.spi.ReportType;
 import com.jad.utils.Utils;
 
 import java.text.MessageFormat;

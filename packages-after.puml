@@ -1,0 +1,179 @@
+@startuml MavenSensorHub - Package Diagram (APRÈS Refactoring TP4)
+
+!define MODEL_COLOR #E1F5FE
+!define SPI_COLOR #FFF3E0
+!define API_COLOR #FFF9C4
+!define CORE_COLOR #E3F2FD
+!define IMPL_COLOR #C8E6C9
+
+skinparam packageStyle rectangle
+skinparam component {
+    BackgroundColor<<model>> MODEL_COLOR
+    BackgroundColor<<spi>> SPI_COLOR
+    BackgroundColor<<api>> API_COLOR
+    BackgroundColor<<core>> CORE_COLOR
+    BackgroundColor<<impl>> IMPL_COLOR
+    BorderColor #666666
+    FontSize 12
+}
+
+package "MavenSensorHub" {
+    
+    ' ===== COUCHE MODÈLE =====
+    package "shared-model" <<model>> {
+        [SensorData]
+        [SensorType]
+        note right
+            <b>Domaine métier pur</b>
+            - Record SensorData
+            - Enum SensorType
+            - Aucune dépendance
+        end note
+    }
+    
+    ' ===== COUCHE SPI =====
+    package "report-spi" <<spi>> {
+        [IReportGenerator.spi]
+        [ReportType]
+        note right
+            <b>Service Provider Interface</b>
+            - Contrat d'extensibilité
+            - Dépend de shared-model
+        end note
+    }
+    
+    ' ===== COUCHE API =====
+    package "api" <<api>> {
+        [ISensor]
+        [ISensorFactory]
+        [IDataManager]
+        [IDataProcessor]
+        [IDataStorage]
+        [IReportGenerator]
+        [IUserInterface]
+        [IApplication]
+        [UserAction]
+        note right
+            <b>Contrats applicatifs</b>
+            - Interfaces métier
+            - Dépend de shared-model + report-spi
+        end note
+    }
+    
+    ' ===== COUCHE UTILITAIRE =====
+    package "utils" <<core>> {
+        [Logger]
+        [Utils]
+        [ILogger]
+        [LogType]
+    }
+    
+    ' ===== COUCHE IMPLÉMENTATION =====
+    package "sensor-data-collection" <<impl>> {
+        [SensorFactory]
+        [AbstractSensor]
+        [TemperatureSensor]
+        [HumiditySensor]
+        [PressureSensor]
+        [WindSpeedSensor]
+    }
+    
+    package "data-management" <<impl>> {
+        [DataManager]
+        [DataCollector]
+        [DataProcessor]
+        [DataStorage]
+        [DataValidator]
+    }
+    
+    package "report-generation" <<impl>> {
+        [ReportGenerator]
+        [AbstractReportGenerator]
+        [TextReportGenerator]
+        [CSVReportGenerator]
+    }
+    
+    package "user-interface" <<impl>> {
+        [UserInterface]
+        [Dashboard]
+        [UserInteraction]
+    }
+    
+    ' ===== APPLICATION PRINCIPALE =====
+    package "main-application" <<core>> {
+        [Application]
+        [Main]
+    }
+}
+
+' ==========================================
+' DÉPENDANCES - Architecture en couches
+' ==========================================
+
+' SPI dépend du modèle
+[report-spi] --> [shared-model] : <<use>>
+
+' API dépend du modèle et du SPI
+[api] --> [shared-model] : <<use>>
+[api] --> [report-spi] : <<use>>
+
+' Utils dépend de l'API (pour les interfaces de logging)
+[utils] --> [api] : <<use>>
+
+' Modules d'implémentation dépendent de l'API
+[sensor-data-collection] --> [api] : <<use>>
+[sensor-data-collection] ..> [utils] : <<provided>>
+
+[data-management] --> [api] : <<use>>
+[data-management] ..> [utils] : <<provided>>
+
+[report-generation] --> [api] : <<use>>
+[report-generation] ..> [utils] : <<provided>>
+
+[user-interface] --> [api] : <<use>>
+
+' Application principale orchestre tout
+[main-application] --> [api] : <<use>>
+[main-application] --> [utils] : <<use>>
+[main-application] --> [sensor-data-collection] : <<use>>
+[main-application] --> [data-management] : <<use>>
+[main-application] --> [report-generation] : <<use>>
+[main-application] --> [user-interface] : <<use>>
+
+legend right
+    |= Légende |= Description |
+    | <back:MODEL_COLOR>MODEL</back> | Modèle de domaine (données pures) |
+    | <back:SPI_COLOR>SPI</back> | Service Provider Interface (extensibilité) |
+    | <back:API_COLOR>API</back> | Contrats applicatifs (interfaces métier) |
+    | <back:CORE_COLOR>CORE</back> | Modules centraux |
+    | <back:IMPL_COLOR>IMPL</back> | Implémentations métier |
+    | --> | Dépendance compile |
+    | ..> | Dépendance provided |
+endlegend
+
+note as N1
+    <b>Architecture en couches stricte (TP4)</b>
+    
+    1. <b>Model Layer</b> : Données pures (aucune dépendance)
+    2. <b>SPI Layer</b> : Contrats d'extension (Java SPI pattern)
+    3. <b>API Layer</b> : Contrats applicatifs
+    4. <b>Utils Layer</b> : Utilitaires transverses
+    5. <b>Implementation Layer</b> : Logique métier
+    6. <b>Application Layer</b> : Point d'entrée
+    
+    <b>Améliorations TP4</b> :
+    ✓ Séparation modèle/contrats
+    ✓ SPI pour l'extensibilité
+    ✓ DependencyManagement centralisé
+    ✓ Maven Enforcer (Java 21, convergence)
+    ✓ Versions centralisées dans parent POM
+    ✓ Dépendances unidirectionnelles
+    
+    <b>Risques évités</b> :
+    ✗ Pas de cycles de dépendances
+    ✗ Pas de conflits de versions
+    ✗ Pas de couplage fort entre modules
+end note
+
+@enduml
+

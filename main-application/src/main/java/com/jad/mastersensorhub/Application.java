@@ -5,9 +5,9 @@ import com.jad.api.IDataManager;
 import com.jad.api.IReportGenerator;
 import com.jad.api.IUserInterface;
 import com.jad.api.ISensorFactory;
-import com.jad.api.ReportType;
-import com.jad.api.SensorType;
 import com.jad.api.UserAction;
+import com.jad.model.SensorType;
+import com.jad.report.spi.ReportType;
 import com.jad.utils.Utils;
 
 public class Application implements IApplication {
